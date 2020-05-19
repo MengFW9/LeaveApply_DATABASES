@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>审批</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../layui/css/layui.css">
+    <!--<link rel="stylesheet" href="../css/bootstrap-table.css">-->
+    <script type="text/javascript" src="../js/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.form.js"></script>
+    <script type="text/javascript" src="../layui/layui.js"></script>
+</head>
+<body style="background-image: url('../images/back.jpg');background-attachment:fixed;background-size:cover">
+
+
+<div class="layui-bg-cyan" style="width:100%;height: 100% ;position:absolute;margin:0 0;opacity: 0.85"><!--虚化背景--></div>
+
+<ul class="layui-nav layui-bg-cyan">
+    <li class="layui-nav-item"><a href="../apply/manage.html">主页</a></li>
+    <li class="layui-nav-item layui-this"><a href="../rootaction/editapply.html">审批请假单</a></li>
+    <li class="layui-nav-item"><a href="misc.html">请假单与学生管理</a></li>
+    <li class="layui-nav-item"><a href="../index.html">登出</a></li>
+</ul>
+
+
+<div style="width:1000px;height: auto ;position:absolute;left:50%;margin:0 -500px">
+    <div class="container">
+        <br>
+        <h2 style="color: #f0f0f0">审核请假</h2>
+        <table class="layui-table" lay-data="{url:'/apply/layuitable', id:'test3',page:true,limits:[10,12,14,16]}" lay-filter="test3">
+            <thead>
+            <tr>
+                <th lay-data="{field:'applynum', sort: true}">申请单号</th>
+                <th lay-data="{field:'applytime', sort: true}">申请时间</th>
+                <th lay-data="{field:'reason'}">原因</th>
+                <th lay-data="{field:'state', edit: 'text'}">申请状态</th>
+                <th lay-data="{field:'studentnum'}">学号</th>
+                <th lay-data="{field:'lessonnum', sort: true}">班级号</th>
+                <th lay-data="{field:'teachernum', sort: true}">教师号</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+</body>
+
+
+<script>
+    layui.use('element', function () {
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function (elem) {
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+
+        //监听单元格编辑
+        table.on('edit(test3)', function (obj) {
+            var value = obj.value //得到修改后的值
+                , data = obj.data //得到所在行所有键值
+                , field = obj.field; //得到字段
+            // layer.msg('[申请单号: ' + data.applynum + '] ' + field + ' 字段更改为：' + value);
+            if(value==='已通过'||value==='未通过'||value==='未审核') {
+                layer.open({
+                    title: '提示',
+                    content: '第' + data.applynum + '号申请单状态已改为' + value,
+                    icon:1
+                });
+                $.post("/apply/changestate",
+                    {
+                        applynum: data.applynum,
+                        newstate: data.state
+                    })
+            }
+            else
+                layer.msg('状态只能为(已通过，未通过，未审核中的一种)，您的更改请求不会被数据库记录',{icon:2})
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" style="width:100%;height: 100%">
+<head>
+    <meta charset="UTF-8">
+    <title>学生页面</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-grid.min.css">
+    <link rel="stylesheet" type="text/css" href="../layui/css/layui.css">
+    <script type="text/javascript" src="../js/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.form.js"></script>
+    <script src="../layui/layui.js" charset="utf-8"></script>
+</head>
+
+<body style="background-image: url('../images/back.jpg');width:100%;height: 100%;background-attachment:fixed;background-size:cover">
+
+<div class="layui-bg-cyan" style="width:100%;height: 100% ;position:absolute;margin:0 0;opacity: 0.85"><!--虚化背景--></div>
+
+<!--导航栏-->
+<ul class="layui-nav layui-bg-cyan">
+    <li class="layui-nav-item layui-this"><a href="">所有请假</a></li>
+    <!--    <li class="layui-nav-item">-->
+    <!--        <a href="javascript:;">修改请假</a>-->
+    <!--        <dl class="layui-nav-child">-->
+    <!--            <dd><a href="">新增请假单</a></dd>-->
+    <!--            <dd><a href="">编辑请假单</a></dd>-->
+    <!--            <dd><a href="">撤回请假单</a></dd>-->
+    <!--        </dl>-->
+    <!--    </li>-->
+    <li class="layui-nav-item"><a href="../index.html">登出</a></li>
+</ul>
+
+<div style="width:1000px;height: auto ;position:absolute;left:50%;margin:0 -500px">
+    <div class="container">
+
+        <!--    layui表格-->
+        <table id="demo" lay-filter="test"></table>
+
+        <br>
+
+
+        <form class="layui-form" action="" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="color: #f0f0f0">学号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="studentnum" required lay-verify="required" placeholder="请输入学号"
+                           autocomplete="off"
+                           class="layui-input" id="stunum">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="color: #f0f0f0">日期</label>
+                <div class="layui-input-block">
+                    <input type="text" name="applytime" required lay-verify="required" placeholder="请输入日期"
+                           autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="color: #f0f0f0">课程号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="lessonnum" required lay-verify="required" placeholder="请输入课程号"
+                           autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="color: #f0f0f0">教师号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="teachernum" required lay-verify="required" placeholder="请输入任课教师工号"
+                           autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label" style="color: #f0f0f0">原因</label>
+                <div class="layui-input-block">
+                    <textarea name="reason" placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+</body>
+
+<!--    js动态生成表格，太丑，废弃-->
+<!--<script>-->
+<!--    $(document).ready(function () {-->
+<!--            var id = window.location.href.split("=")[1];-->
+<!--            console.log(id);-->
+<!--            $("#head").html("学号："+id);-->
+<!--            $.post("/apply/findstu",-->
+<!--                {-->
+<!--                    studentnum: id.toString()-->
+<!--                },-->
+<!--                function (data, status) {-->
+<!--                    console.log(data);-->
+<!--                    var code = ""-->
+<!--                    for (var i = 0; i < data.length; i++) {-->
+<!--                        code += "<tr><td>" + data[i].applynum + "</td><td>" + data[i].applytime + "</td><td>" + data[i].reason +-->
+<!--                            "</td><td>" + data[i].state + "</td><td>" + data[i].studentnum + "</td><td>" + data[i].lessonnum + "</td><td>" + data[i].teachernum + "</td></tr>"-->
+<!--                    }-->
+<!--                    $("#show").html(code);-->
+<!--                });-->
+<!--        }-->
+<!--    )-->
+<!--</script>-->
+
+<script>
+    //Demo
+    layui.use('form', function () {
+        var form = layui.form;
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            layer.msg(JSON.stringify(data.field));
+
+            $.post("/apply/addapply",
+                {
+                    studentnum: data.field.studentnum,
+                    applytime: data.field.applytime,
+                    lessonnum: data.field.lessonnum,
+                    teachernum: data.field.teachernum,
+                    reason: data.field.reason
+                });
+            layer.open({
+                    title: '提示',
+                    content: '提交成功',
+                    icon: 1
+                }
+            );
+            //阻止表单的默认提交
+            return false;
+        });
+    });
+</script>
+
+<script>
+    layui.use('element', function () {
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function (elem) {
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(
+        function () {
+            var id = window.location.href.split("=")[1];
+            $("#stunum").val(id);
+        }
+    )
+    layui.use('table', function () {
+        var table = layui.table;
+        var id = window.location.href.split("=")[1];
+
+        //第一个实例
+        table.render({
+            even: 'true'
+            , elem: '#demo'
+            , limit: 4
+            , limits: [4]
+            , url: '/apply/layuitablestu' //数据接口
+            , where: {studentnum: id}
+            , page: true //开启分页
+            , cols: [[ //表头
+                {field: 'applynum', title: '申请单号', sort: true, fixed: 'left'}
+                , {field: 'applytime', title: '申请时间'}
+                , {field: 'reason', title: '原因', sort: true}
+                , {field: 'state', title: '申请状态'}
+                , {field: 'studentnum', title: '学号'}
+                , {field: 'lessonnum', title: '班级号', sort: true}
+                , {field: 'teachernum', title: '教师号', sort: true}
+            ]]
+        });
+
+    });
+</script>
+
+</html>

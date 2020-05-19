@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员页面</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../layui/css/layui.css">
+    <!--<link rel="stylesheet" href="../css/bootstrap-table.css">-->
+    <script type="text/javascript" src="../js/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.form.js"></script>
+    <script type="text/javascript" src="../layui/layui.js"></script>
+    <!--<script src="../js/bootstrap-table.js"></script>
+    <汉化文件，放在 bootstrap-table.js 后面>
+    <script src="../js/bootstrap-table-zh-CN.js"></script>-->
+</head>
+<body style="background-image: url('../images/back.jpg');width:100%;height: 100%;background-attachment:fixed;background-size:cover">
+
+<div class="layui-bg-cyan" style="width:100%;height: 100% ;position:absolute;margin:0 0;opacity: 0.85"><!--虚化背景--></div>
+
+<!--    导航-->
+<ul class="layui-nav layui-bg-cyan">
+    <li class="layui-nav-item layui-this"><a href="../apply/manage.html">主页</a></li>
+    <li class="layui-nav-item"><a href="../rootaction/editapply.html">审批请假单</a></li>
+    <li class="layui-nav-item"><a href="../rootaction/misc.html">请假单与学生管理</a></li>
+    <li class="layui-nav-item"><a href="../index.html">登出</a></li>
+</ul>
+
+
+<div style="width:1000px;height: auto ;position:absolute;left:50%;margin:0 -500px">
+
+
+    <div class="container">
+        <br>
+        <h2 style="color: #f0f0f0">所有请假单</h2>
+        <table id="demo" lay-filter="test"></table>
+    </div>
+</div>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" style="color: white">删除</a>
+</script>
+
+<script>
+    layui.use('element', function () {
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function (elem) {
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
+
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+
+        //第一个实例
+        table.render({
+            even: 'true'
+            , limits: [10, 12, 14, 16]
+            , elem: '#demo'
+            , url: '/apply/layuitable' //数据接口
+            , page: true //开启分页
+            , cols: [[ //表头
+                {field: 'applynum', title: '申请单号', sort: true, fixed: 'left',width:110}
+                , {field: 'applytime', title: '申请时间',}
+                , {field: 'reason', title: '原因', sort: true}
+                , {field: 'state', title: '申请状态',width:100}
+                , {field: 'studentnum', title: '学号',width:140}
+                , {field: 'lessonnum', title: '班级号', sort: true,width:100}
+                , {field: 'teachernum', title: '教师号', sort: true,width:100}
+                , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 80}
+            ]]
+        });
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            console.log(obj.data);
+            if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    $.post("/apply/del",
+                        {
+                            applynum: obj.data.applynum,
+                        });
+                    obj.del();
+                    layer.close(index);
+                });
+            }
+        });
+
+    });
+</script>
+
+
+</body>
+</html>

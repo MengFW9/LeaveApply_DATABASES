@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.databasecourse.applysys.Dao.userdao">
+
+    <select id="Getpw" parameterType="String" resultType="String">
+        SELECT passwd
+        FROM users
+        WHERE studentnum = #{studentnum}
+    </select>
+
+    <select id="GetAllUsers" resultType="com.databasecourse.applysys.Bean.userbean">
+            SELECT * FROM users
+            WHERE studentnum != 'root'
+            limit #{start},#{limit}
+    </select>
+
+    <select id="allusers" resultType="com.databasecourse.applysys.Bean.userbean">
+        SELECT * FROM users
+        WHERE studentnum != 'root'
+    </select>
+
+    <delete id="DelUser">
+        DELETE
+        FROM users
+        WHERE studentnum = #{studentnum}
+    </delete>
+
+    <update id="UpdatePw">
+        UPDATE users
+        SET passwd = #{passwd}
+        WHERE studentnum = #{studentnum}
+    </update>
+
+    <insert id="AddUser" parameterType="com.databasecourse.applysys.Bean.userbean">
+        INSERT INTO users
+        VALUES (#{studentnum},#{passwd},#{studentname})
+    </insert>
+</mapper>

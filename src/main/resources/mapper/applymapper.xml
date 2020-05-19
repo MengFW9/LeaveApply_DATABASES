@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.databasecourse.applysys.Dao.applydao">
+
+    <select id="FindAll" resultType="com.databasecourse.applysys.Bean.applybean">
+        SELECT * FROM leave_apply
+    </select>
+    <select id="FindAllLeaveApply" resultType="com.databasecourse.applysys.Bean.applybean">
+        SELECT * FROM leave_apply limit #{start},#{limit}
+    </select>
+
+    <select id="FindLeaveApply" parameterType="Integer" resultType="com.databasecourse.applysys.Bean.applybean">
+        SELECT * FROM leave_apply WHERE applynum=#{applynum}
+    </select>
+
+    <select id="FindStudent" parameterType="String" resultType="com.databasecourse.applysys.Bean.applybean">
+        SELECT * FROM leave_apply WHERE studentnum=#{studentnum}
+    </select>
+    <insert id="AddLeaveApply" parameterType="com.databasecourse.applysys.Bean.applybean" >
+        INSERT INTO leave_apply(applytime,reason,studentnum,lessonnum,teachernum)
+        VALUES (#{applytime},#{reason},#{studentnum},#{lessonnum},#{teachernum})
+    </insert>
+
+    <update id="ChangeApplyState">
+        UPDATE leave_apply SET
+        state=#{newstate}
+        WHERE applynum=#{applynum}
+    </update>
+
+<!--    多条件+存储查询    -->
+    <select id="FindApplyByDate" statementType="CALLABLE" useCache="false" resultType="com.databasecourse.applysys.Bean.applybean">
+        call select_apply_by_date(#{Date,mode=IN},#{start,mode=IN},#{limit,mode=IN})
+    </select>
+
+    <select id="DeleteLeaveApply" statementType="CALLABLE" useCache="false" resultType="com.databasecourse.applysys.Bean.applybean">
+        call delete_apply_thenshow(#{applynum,mode=IN})
+    </select>
+
+    <delete id="DeleteOneApply">
+        DELETE FROM leave_apply WHERE applynum=#{applynum}
+    </delete>
+
+    <delete id="RemoveAll">
+        TRUNCATE leave_apply
+    </delete>
+
+
+
+</mapper>

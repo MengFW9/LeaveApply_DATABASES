@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登陆页面</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-grid.min.css">
+    <link rel="stylesheet" type="text/css" href="../layui/css/layui.css">
+    <script type="text/javascript" src="../js/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.form.js"></script>
+</head>
+<body style="background-image: url('../images/back.jpg');background-attachment:fixed;background-size:cover">
+<div class="layui-bg-cyan rounded-pill" style="width:660px;height:400px;position:absolute;left:50%;top:50%;margin:-200px -330px;opacity: 0.85">
+    <!--虚化背景-->
+</div>
+<div id="welcome" class="container form-group" style="width:400px;height:400px;position:absolute;left:50%;top:50%;margin:-200px -200px;display: none">
+    <br><br><br><br>
+    <h1 class="text-center" style="color: #f0f0f0">学生请假系统</h1>
+    <form role="form" id="login" action="/login" method="post">
+        <div class="form-group">
+            <label for="studentnum" style="color: #f0f0f0">学号:</label>
+            <input type="text" name="studentnum" class="form-control" id="studentnum" placeholder="请输入学号">
+        </div>
+        <div class="form-group" style="color: #f0f0f0">
+            <label for="pwd">密码:</label>
+            <input type="password" name="passwd" class="form-control" id="pwd" placeholder="请输入密码">
+        </div>
+        <div align="center">
+            <button type="submit" class="layui-btn" style="background-color: #0f6674">登录</button>
+        </div>
+    </form>
+</div>
+
+<script>
+
+    $(function () {
+        $("#login").ajaxForm(function (data) {
+
+            if (data === "student") {
+                //将学号传给页面便于识别身份
+                window.location.href = '../apply/student.html?studentnum='+$("#studentnum").val();
+            } else if (data === "root") {
+                console.log(data);
+                window.location.href = '../apply/manage.html';
+            } else {
+                alert("学号或密码错误")
+            }
+        })
+    });
+
+    $(document).ready(
+        function () {
+            $("#welcome").fadeIn(500);
+        }
+    )
+    ;
+
+</script>
+
+</body>
+</html>
